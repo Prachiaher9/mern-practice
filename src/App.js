@@ -4,6 +4,7 @@ import Todolist from "./tasks/todolist";
 import FetchUsers from "./tasks/FetchUsers";
 import UsersWithReducer from "./tasks/UsersWithReducer";
 import UseReducerPractice from "./tasks/UseReducerPractice";
+import OptimizedUsersList from "./tasks/OptimizedUsersList";
 
 function App() {
   return (
@@ -11,8 +12,8 @@ function App() {
       {/* <Todolist /> */}
       {/* <FetchUsers/> */}
       {/* <UsersWithReducer/> */}
-
-      <UseReducerPractice/>
+      {/* <UseReducerPractice/> */}
+      <OptimizedUsersList/>
     </div>
   );
 }
