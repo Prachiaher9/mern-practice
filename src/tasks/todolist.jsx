@@ -1,14 +1,19 @@
 import { useState } from "react";
 
 function Todolist() {
-  const [lists, setLists] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const addToList = () => {
     if (inputValue.trim() !== "") {
-      setLists([...lists, inputValue]);
+      setTasks([...tasks, inputValue]);
       setInputValue("");
     }
+  };
+
+  const deleteTask = (deleteIndex) => {
+    console.log(deleteIndex,"deleteIndex")
+    setTasks(tasks.filter((_, index) => index !== deleteIndex));
   };
 
   return (
@@ -20,14 +25,18 @@ function Todolist() {
         placeholder="Enter an item"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && addToList()}
       />
 
       <button onClick={addToList}>Add to list</button>
 
-      <h2>These are the lists:</h2>
+      <h2>These are the tasks:</h2>
       <ul>
-        {lists.map((item, index) => (
-          <li key={index}>{item}</li>
+        {tasks.map((item, index) => (
+          <li key={index}>
+            {item}
+            <button onClick={() => deleteTask(index)}>Delete</button>
+          </li>
         ))}
       </ul>
     </div>
