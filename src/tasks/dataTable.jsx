@@ -1,9 +1,9 @@
-
 import React, { useState, useMemo } from "react";
 
 const DataTable = ({ headers, rows, onRowClick }) => {
   const [search, setSearch] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   const filteredRows = useMemo(() => {
     console.log("Filtering rows only when rows/headers/search changes");
@@ -20,6 +20,32 @@ const DataTable = ({ headers, rows, onRowClick }) => {
     if (onRowClick) onRowClick(row);
   };
 
+  const handleSort = (key) => {
+    if (sortConfig.key === key) {
+      setSortConfig({
+        key,
+        direction: sortConfig.direction === "asc" ? "desc" : "asc",
+      });
+    } else {
+      setSortConfig({ key, direction: "asc" });
+    }
+  };
+
+  const sortedRows = useMemo(() => {
+    let sortable = [...filteredRows];
+    if (sortConfig.key) {
+      sortable.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortable;
+  }, [filteredRows, sortConfig]);
 
   return (
     <div>
@@ -40,12 +66,23 @@ const DataTable = ({ headers, rows, onRowClick }) => {
         <thead>
           <tr>
             {headers.map((col) => (
-              <th key={col.key}>{col.label}</th>
+              <th
+                key={col.key}
+                onClick={() => handleSort(col.key)}
+                style={{ cursor: "pointer" }}
+              >
+                {col.label}{" "}
+                {sortConfig.key === col.key
+                  ? sortConfig.direction === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {filteredRows.map((row, idx) => (
+          {sortedRows.map((row, idx) => (
             <tr
               key={idx}
               onClick={() => handleRowClick(row)}

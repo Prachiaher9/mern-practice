@@ -15,7 +15,7 @@ function App() {
   ];
   const data = [
     { name: "Prachi", email: "prachi@test.com", role: "Developer" },
-    { name: "prachi 2", email: "prachi2@test.com", role: "Designer" },
+    { name: "aprachi 2", email: "prachi2@test.com", role: "Designer" },
   ];
 
 
