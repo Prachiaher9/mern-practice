@@ -5,6 +5,7 @@ import ChildCompo from "./ChildCompo";
 const OptimizedUsersList = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState("");
+  const [favUsers, setFavUsers] = useState([]);
 
   const users = useMemo(
     () =>
@@ -22,8 +23,6 @@ const OptimizedUsersList = () => {
     console.log("Clicked user", id);
   }, []);
 
-
-
   const filteredData = useMemo(() => {
     if (!search) return users;
     const lowerSearch = search.toLowerCase();
@@ -35,23 +34,54 @@ const OptimizedUsersList = () => {
     );
   }, [search, users]);
 
-  console.log(filteredData, "filteredData");
+  const toggleFavorite = useCallback((id) => {
+    setFavUsers((prev) =>
+      prev.includes(id) ? prev.filter((uid) => uid !== id) : [...prev, id]
+    );
+  }, []);
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+    <div className="container">
+      <div className="row">
+        <div className="col-6">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <h6>Selected User ID: {selectedId}</h6>
+          <ul>
+            {filteredData.map((user) => (
+              <ChildCompo
+                key={user.id}
+                user={user}
+                onClick={handleClick}
+                toggleFavoriteonClick={handleClick}
+                onToggleFav={toggleFavorite}
+                isFavorite={favUsers.includes(user.id)}
+              />
+            ))}
+          </ul>
+        </div>
 
-      <h6>Selected User ID: {selectedId}</h6>
-      <ul>
-        {filteredData.map((user) => (
-          <ChildCompo key={user.id} user={user} onClick={handleClick} />
-        ))}
-      </ul>
+        <div className="col-6">
+          <h3>Favorite Users:</h3>
+          <ul>
+            {users
+              .filter((u) => favUsers.includes(u.id))
+              .map((user) => (
+                <ChildCompo
+                  key={user.id}
+                  user={user}
+                  onClick={handleClick}
+                  onToggleFav={toggleFavorite}
+                  isFavorite={true}
+                />
+              ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
