@@ -1,103 +1,45 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 const DataTable = ({ headers, rows, onRowClick }) => {
-  const [search, setSearch] = useState("");
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [searchValue, setSearchValue] = useState("");
+
+
 
   const filteredRows = useMemo(() => {
-    console.log("Filtering rows only when rows/headers/search changes");
-    if (!search) return rows;
-    return rows.filter((row) =>
-      headers.some((col) =>
-        String(row[col.key]).toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [rows, headers, search]);
+    if (!searchValue) return rows;
 
-  const handleRowClick = (row) => {
-    setSelectedRow(row);
-    if (onRowClick) onRowClick(row);
-  };
+    const lowerSearch = searchValue.toLowerCase
 
-  const handleSort = (key) => {
-    if (sortConfig.key === key) {
-      setSortConfig({
-        key,
-        direction: sortConfig.direction === "asc" ? "desc" : "asc",
-      });
-    } else {
-      setSortConfig({ key, direction: "asc" });
-    }
-  };
+    return rows.filter((row)=>(
+       headers.some((col)=>(
+         String(row[col.key] || "").toLowerCase().includes(searchValue) 
+       ))
+    ))
 
-  const sortedRows = useMemo(() => {
-    let sortable = [...filteredRows];
-    if (sortConfig.key) {
-      sortable.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortable;
-  }, [filteredRows, sortConfig]);
+  }, [searchValue, headers, rows]);
+
+
 
   return (
     <div>
       <input
-        type="text"
         placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ marginBottom: "10px", padding: "5px" }}
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
       />
-
-      <table
-        border="1"
-        cellPadding="8"
-        cellSpacing="0"
-        style={{ width: "100%", borderCollapse: "collapse" }}
-      >
+      <table>
         <thead>
           <tr>
-            {headers.map((col) => (
-              <th
-                key={col.key}
-                onClick={() => handleSort(col.key)}
-                style={{ cursor: "pointer" }}
-              >
-                {col.label}{" "}
-                {sortConfig.key === col.key
-                  ? sortConfig.direction === "asc"
-                    ? "↑"
-                    : "↓"
-                  : ""}
-              </th>
-            ))}
+            {headers.map((col) => {
+              return <th key={col.key}>{col.label}</th>;
+            })}
           </tr>
         </thead>
         <tbody>
-          {sortedRows.map((row, idx) => (
-            <tr
-              key={idx}
-              onClick={() => handleRowClick(row)}
-              style={{
-                backgroundColor:
-                  selectedRow === row
-                    ? "#d3f4ff"
-                    : idx % 2 === 0
-                    ? "#f9f9f9"
-                    : "white",
-                cursor: "pointer",
-              }}
-            >
+          {filteredRows?.map((row,rowIndex) => (
+            <tr key={rowIndex}>
               {headers.map((col) => (
-                <td key={col.key}>{row[col.key]}</td>
+                <td>{row[col.key]}</td>
               ))}
             </tr>
           ))}
@@ -108,3 +50,5 @@ const DataTable = ({ headers, rows, onRowClick }) => {
 };
 
 export default DataTable;
+
+

@@ -25,11 +25,11 @@ function App() {
       {/* <FetchUsers/> */}
       {/* <UsersWithReducer/> */}
       {/* <UseReducerPractice/> */}
-      <OptimizedUsersList/>
-      {/* <DataTable 
+      {/* <OptimizedUsersList/> */}
+      <DataTable 
       headers = {columns}
       rows = {data}
-      onRowClick={(row) => console.log("Row clicked:", row)} /> */}
+      onRowClick={(row) => console.log("Row clicked:", row)} />
     </div>
   );
 }
