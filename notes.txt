@@ -28,3 +28,11 @@ Task 8: Todo list (add/remove toggle complete)
 Task 9: Loading + success + error states
 
 Task 10: API fetch with useReducer
+
+
+
+
+
+note - 
+if we want to render the data based on some condition use filter method
+

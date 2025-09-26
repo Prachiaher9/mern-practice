@@ -3,22 +3,13 @@ import React, { useMemo, useState } from "react";
 const DataTable = ({ headers, rows, onRowClick }) => {
   const [searchValue, setSearchValue] = useState("");
 
-
-
   const filteredRows = useMemo(() => {
     if (!searchValue) return rows;
-
-    const lowerSearch = searchValue.toLowerCase
-
-    return rows.filter((row)=>(
-       headers.some((col)=>(
-         String(row[col.key] || "").toLowerCase().includes(searchValue) 
-       ))
-    ))
-
+    const lowerSearch = searchValue.toLowerCase();
+    return rows.filter((row) =>
+      headers.some((col) => String(row[col.key] || "").toLocaleLowerCase().includes(lowerSearch))
+    );
   }, [searchValue, headers, rows]);
-
-
 
   return (
     <div>
@@ -50,5 +41,3 @@ const DataTable = ({ headers, rows, onRowClick }) => {
 };
 
 export default DataTable;
-
-
